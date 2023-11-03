@@ -1,42 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>Click and Drag</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .container {
+      width: 400px;
+      height: 400px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 5px;
+    }
+
+    .cube {
+      width: 100px;
+      height: 100px;
+      background-color: lightblue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .cube.active {
+      background-color: lightgreen;
+    }
+  </style>
 </head>
+
 <body>
-  <div class="items">
-    <div class="item item1">01</div>
-    <div class="item item2">02</div>
-    <div class="item item3">03</div>
-    <div class="item item4">04</div>
-    <div class="item item5">05</div>
-    <div class="item item6">06</div>
-    <div class="item item7">07</div>
-    <div class="item item8">08</div>
-    <div class="item item9">09</div>
-    <div class="item item10">10</div>
-    <div class="item item11">11</div>
-    <div class="item item12">12</div>
-    <div class="item item13">13</div>
-    <div class="item item14">14</div>
-    <div class="item item15">15</div>
-    <div class="item item16">16</div>
-    <div class="item item17">17</div>
-    <div class="item item18">18</div>
-    <div class="item item19">19</div>
-    <div class="item item20">20</div>
-    <div class="item item21">21</div>
-    <div class="item item22">22</div>
-    <div class="item item23">23</div>
-    <div class="item item24">24</div>
-    <div class="item item25">25</div>
+  <div class="container" id="cube-container">
+    <div class="cube" id="cube-1">1</div>
+    <div class="cube" id="cube-2">2</div>
+    <div class="cube" id="cube-3">3</div>
+    <div class="cube" id="cube-4">4</div>
+    <div class="cube" id="cube-5">5</div>
+    <div class="cube" id="cube-6">6</div>
+    <div class="cube" id="cube-7">7</div>
+    <div class="cube" id="cube-8">8</div>
+    <div class="cube" id="cube-9">9</div>
+    <div class="cube" id="cube-10">10</div>
+    <div class="cube" id="cube-11">11</div>
+    <div class="cube" id="cube-12">12</div>
+    <div class="cube" id="cube-13">13</div>
+    <div class="cube" id="cube-14">14</div>
+    <div class="cube" id="cube-15">15</div>
+    <div class="cube" id="cube-16">16</div>
   </div>
+  <script>
+    const cubeContainer = document.getElementById('cube-container');
+    let activeCube = null;
+    let isDragging = false;
 
-<script>
-//Your code goes here 
-</script>
+    cubeContainer.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('cube')) {
+        activeCube = e.target;
+        activeCube.classList.add('active');
+        isDragging = true;
+      }
+    });
 
-  </body>
+    cubeContainer.addEventListener('mousemove', (e) => {
+      if (isDragging && activeCube) {
+        const cubes = Array.from(document.getElementsByClassName('cube'));
+        const newIndex = cubes.indexOf(activeCube);
+        const rect = cubeContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (x > 0 && y > 0 && x < rect.width && y < rect.height) {
+          const row = Math.floor(y / (rect.height / 4));
+          const col = Math.floor(x / (rect.width / 4));
+          const targetIndex = row * 4 + col;
+          if (newIndex !== targetIndex) {
+            const targetCube = cubes[targetIndex];
+            cubeContainer.insertBefore(activeCube, targetCube);
+          }
+        }
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (activeCube) {
+        activeCube.classList.remove('active');
+        activeCube = null;
+        isDragging = false;
+      }
+    });
+  </script>
+</body>
+
 </html>
